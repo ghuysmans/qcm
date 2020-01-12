@@ -14,8 +14,11 @@ let () =
     ) in
     Format.printf "%a@." pp (Number.decode [Multiple.of_list a])
   else if true then
+    let pp = Answer.pp Format.pp_print_int (fun fmt -> function
+      | `Combined_special -> Format.pp_print_string fmt "combined"
+    ) in
     Multiple.of_list a |> Binary.decode |>
-    Format.printf "%a@." (Number.pp (fun _ () -> ()))
+    Format.printf "%a@." pp
   else if true then
     let pp = Answer.pp Format.pp_print_int (fun fmt -> function
       | `More_than_one -> Format.pp_print_string fmt "multiple"
