@@ -1,14 +1,15 @@
 type 'a t = (bool list, [> `Combined_special] as 'a) Answer.t
 
 let decode special x =
-  Answer.map (function
+  Answer.map (fun l ->
+    match List.rev l with
     | true :: t ->
       if List.exists (fun x -> x) t then
         Error `Combined_special
       else
         Ok (List.map (fun _ -> special) t)
     | false :: t ->
-      Ok t
+      Ok (List.rev t)
     | [] ->
       failwith "empty answer set"
   ) x

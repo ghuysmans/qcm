@@ -1,9 +1,8 @@
-type 'e t = (int, 'e) Answer.t [@@deriving show]
+type 'e t = (int, ([> `More_than_one] as 'e) list) Answer.t
 
-let binary x =
+let decode ?(base = 10) l =
+  List.map Single.decode l |>
+  Answer.join |>
   Answer.map (fun l ->
-    (* that zero at the end is ignored, but allows cancelling/abstention *)
-    Ok (List.fold_left (fun acc b -> acc * 2 + if b then 1 else 0) 0 l / 2)
-  ) x
-
-(* TODO decimal, beware of unwanted abstention *)
+    Ok (List.fold_left (fun acc d -> acc * base + d) 0 l)
+  )
