@@ -17,8 +17,8 @@ let%test _ = map (fun x -> Ok (x + 1)) (Filled (Ok 2)) = Filled (Ok 3)
 let%test _ = map (fun x -> Ok (x + 1)) (Filled (Error "z")) = Filled (Error "z")
 
 let join l =
-  let f a b =
-    match a, b with
+  let f x acc =
+    match x, acc with
     | Filled (Ok h), Filled (Ok t) -> Filled (Ok (h :: t))
     (* abstention, cancellation and errors have priority *)
     | _, Abstention | Abstention, _-> Abstention
@@ -29,11 +29,7 @@ let join l =
   in
   match l with
   | [] -> failwith "empty answer set"
-  (* just wrap Ok and Error *)
-  | Abstention :: t -> List.fold_right f t Abstention
-  | Cancelled :: t -> List.fold_right f t Cancelled
-  | Filled (Ok x) :: t -> List.fold_right f t (Filled (Ok [x]))
-  | Filled (Error e) :: t -> List.fold_right f t (Filled (Error [e]))
+  | _ -> List.fold_right f l (Filled (Ok []))
 
 let%test _ = join [Abstention; Filled (Ok 2)] = Abstention
 let%test _ = join [Filled (Ok 2); Abstention] = Abstention
