@@ -1,4 +1,4 @@
-type 'e t = ([> `Combined_special] as 'e) Number.t
+type 'e t = (int, [> `Combined_special] as 'e) Answer.t
 
 let decode x =
   Special.or_none_above x |>

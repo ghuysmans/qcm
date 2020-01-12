@@ -1,5 +1,3 @@
-(* FIXME mli *)
-
 type ('a, 'b) t =
   | Abstention
   | Cancelled
