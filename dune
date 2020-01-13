@@ -1,3 +1,7 @@
 (executable
  (name demo)
- (libraries qcm))
+ (modes js)
+ (libraries
+  qcm qcm_web
+  js_of_ocaml.ppx js_of_ocaml-tyxml)
+ (preprocess (pps js_of_ocaml.ppx)))
