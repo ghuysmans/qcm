@@ -34,3 +34,12 @@ let make question answers =
   ),
   let expected = List.map fst answers in
   s |> S.map (Qcm.Status.of_answer ((=) expected))
+
+
+let simple l =
+  List.map (fun (question, l) ->
+    Html.[txt question],
+    List.map (fun (v, x) -> v, Html.[txt x]) l
+  ) l |>
+  List.map (fun (q, a) -> make q a) |>
+  List.split

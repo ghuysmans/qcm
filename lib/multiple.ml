@@ -33,3 +33,8 @@ let%test _ = bits ~size:2 0b10 = [true; false]
 let%test _ = bits ~size:2 0b11 = [true; true]
 
 let of_int ~size n = of_list (bits ~size n)
+
+module DSL = struct
+  let t x = true, x
+  let f x = false, x
+end
