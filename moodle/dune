@@ -1,0 +1,5 @@
+(executable
+ (name import)
+ (libraries lambdasoup ppx_deriving_yojson qcm)
+ (preprocess (pps ppx_deriving_yojson))
+)

@@ -35,6 +35,7 @@ let%test _ = bits ~size:2 0b11 = [true; true]
 let of_int ~size n = of_list (bits ~size n)
 
 module DSL = struct
+  type t = string * (bool * string) list [@@deriving yojson] (* FIXME *)
   let t x = true, x
   let f x = false, x
 end

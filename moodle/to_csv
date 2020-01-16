@@ -1,0 +1,6 @@
+#!/bin/sh
+#ŧaken from https://www.freecodecamp.org/news/how-to-transform-json-to-csv-using-jq-in-the-command-line-4fa7939558bf/
+jq -r '(map(keys) | add | unique) as $cols |
+		map(. as $row | $cols | map($row[.])) as $rows |
+		$cols, $rows[] |
+		@csv'
