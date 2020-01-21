@@ -33,10 +33,11 @@ let parse ch =
   List.flatten
 
 let multiple_of_question {amorce; ans_a; ans_b; ans_c; ans_d; ans_e; bonne; _} =
-  amorce, [bonne = "A", ans_a;
-           bonne = "B", ans_b;
-           bonne = "C", ans_c;
-           bonne = "D", ans_d;
-           bonne = "E", ans_e]
+  let has = String.contains bonne in
+  amorce, [has 'A', ans_a;
+           has 'B', ans_b;
+           has 'C', ans_c;
+           has 'D', ans_d;
+           has 'E', ans_e]
 
 type t = question list [@@deriving yojson]
