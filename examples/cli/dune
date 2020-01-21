@@ -1,3 +1,3 @@
 (executable
  (name demo)
- (libraries qcm questions))
+ (libraries qcm qcm_moodle questions))

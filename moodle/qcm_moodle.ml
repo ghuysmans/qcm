@@ -13,7 +13,8 @@ type question = {
   justification: string; (* FIXME? *)
 } [@@deriving yojson]
 
-let questions_of_soup soup =
+let parse ch =
+  let soup = read_channel ch |> parse in
   let sel = ".mod-data-default-template > tbody" in
   delete (soup $ sel); (* the first one *)
   soup $$ sel |> to_list |>
@@ -38,17 +39,4 @@ let multiple_of_question {amorce; ans_a; ans_b; ans_c; ans_d; ans_e; bonne; _} =
            bonne = "D", ans_d;
            bonne = "E", ans_e]
 
-
 type t = question list [@@deriving yojson]
-type m = Qcm.Multiple.DSL.t list [@@deriving yojson] (* FIXME *)
-
-let () =
-  let data = read_channel stdin |> parse |> questions_of_soup in
-  (match Sys.argv with
-  | [| _ |] -> to_yojson data
-  | [| _; "-m" |] -> List.map multiple_of_question data |> m_to_yojson
-  | _ ->
-    Printf.eprintf "usage: %s [-m]\n" Sys.argv.(0);
-    exit 1) |>
-  Yojson.Safe.to_channel stdout;
-  Printf.eprintf "total %d\n" (List.length data);

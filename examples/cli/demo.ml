@@ -18,8 +18,53 @@ let ask (title, answers) =
   Qcm.Multiple.of_list given |>
   Qcm.Status.of_answer ((=) expected)
 
+let load fn =
+  let ch =
+    match fn with
+    | "-" -> stdin
+    | _ -> open_in fn
+  in
+  Qcm_moodle.parse ch
+
 
 let () =
-  List.map ask Questions.list |>
-  Qcm.Grader.(grade negative) |>
-  Printf.printf "score: %g\n"
+  match Sys.argv with
+  | [| _ |] ->
+    List.map ask Questions.list |>
+    Qcm.Grader.(grade negative) |>
+    Printf.printf "score: %g\n"
+  | [| _; fn |] ->
+    let data = load fn in
+    (try
+      while true do
+        let i = Random.int (List.length data) in
+        let q = List.nth data i in
+        Printf.printf "%s\na) %s\nb) %s\nc) %s\nd) %s\ne) %s\n? %!"
+          q.amorce q.ans_a q.ans_b q.ans_c q.ans_d q.ans_e;
+        if Scanf.scanf "%s\n" String.uppercase_ascii = q.bonne then
+          Printf.printf "bien !\n\n"
+        else (
+          let bonne_s =
+            (Char.code q.bonne.[0] - Char.code 'A') |>
+            List.nth (snd (Qcm_moodle.multiple_of_question q)) |>
+            snd
+          in
+          Printf.printf "Non. Selon le chapitre %g, c'était %s : %s\n%s\n\n"
+            q.chapitre
+            q.bonne
+            bonne_s
+            q.justification;
+          Printf.printf "ok ? %!";
+          ignore @@ read_line ();
+          Printf.printf "\n"
+        )
+      done
+    with End_of_file ->
+      ())
+  | [| _; "-d"; fn |] ->
+    let data = load fn in
+    Qcm_moodle.to_yojson data |> Yojson.Safe.to_channel stdout;
+    Printf.eprintf "total %d\n" (List.length data);
+  | _ ->
+    Printf.eprintf "usage: %s [-m]\n" Sys.argv.(0);
+    exit 1
