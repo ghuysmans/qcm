@@ -1,5 +1,5 @@
 (library
  (name qcm_moodle)
- (libraries lambdasoup ppx_deriving_yojson qcm)
+ (libraries lambdasoup qcm)
  (preprocess (pps ppx_deriving_yojson))
 )

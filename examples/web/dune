@@ -3,5 +3,5 @@
  (modes js)
  (libraries
   qcm qcm_web questions
-  js_of_ocaml.ppx js_of_ocaml-tyxml)
+  js_of_ocaml-tyxml)
  (preprocess (pps js_of_ocaml.ppx)))
